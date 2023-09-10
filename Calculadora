@@ -1,1 +1,145 @@
+package Calculadora;
+
+import Pilas.PilaA;
+
+public class InfijoAPosfijo {
+    
+    public InfijoAPosfijo(){
+    }
+    
+    //Metodo auxiliar para revisar los parentesis 
+    private static boolean revisaParentesis(String cadena){
+        boolean resp = true; 
+        PilaA <Character> pila = new PilaA <Character>();
+        int i=0; 
+        char c; 
+        
+        while(i<cadena.length() && resp){
+            c = cadena.charAt(i);
+            switch(c){
+                case '[':
+                    pila.push(']');
+                    break;
+                case '{':
+                    pila.push('}');
+                    break; 
+                case '(':
+                    pila.push(')');
+                    break;
+            }
+            if(c == '}'||c==']'||c==')')
+                if(pila.isEmpty() || c != pila.pop())
+                    resp = false;
+            i++;
+        }
+        return resp && pila.isEmpty();
+    }
+    //Metodo auxiliar para asignar el valor de los operadores para jerarquia
+    private static int jerarquia(char operador){
+        int jerarquia=0; 
+        switch (operador){
+            case '*':
+                jerarquia = 4;
+                break;
+            case '/':
+                jerarquia = 4;
+                break;
+            case '+':
+                jerarquia = 3;
+                break;
+            case '-':
+                jerarquia = 3;
+                break;
+            case '^':
+                jerarquia = 5;
+                break;
+            case '(':
+                jerarquia = 2;
+                break;
+            case ')':
+                jerarquia = 1;
+                break;
+            default: 
+                jerarquia = 0;
+                break;
+        }
+        return jerarquia;
+    }
+    //Metodo para convertir en posfijo basado en un string
+    public static String conviertePosfijo(String infijo){
+        //Pila en donde guarda los operadores
+        PilaA <Character> pila = new PilaA (100);
+        //StringBuilder del resultado
+        StringBuilder sB = new StringBuilder();
+        //Revisa primero que los parentesis esten balanceados
+        if(revisaParentesis(infijo)){
+            int i=0; 
+            while(i<infijo.length()){
+                char c = infijo.charAt(i);
+                //Switch basado en el int que da la jerarquia de ese char
+                switch(jerarquia(c)) {
+                    //Caso del parentesis cerrado
+                    case 1: 
+                        //Mientras la pila no este vacia y el tope no sea parentesis abierto
+                        while(!pila.isEmpty() && jerarquia(pila.peek())!=2){
+                            sB.append(pila.peek());
+                            pila.pop();
+                        }
+                        break;
+                    case 2: 
+                        //Si el parentesis es abierto lo agrega a la pila
+                        pila.push(c);
+                        break; 
+                    case 3: 
+                        //Caso de la multiplicacion
+                        while(!pila.isEmpty() && jerarquia(pila.peek())>=3){
+                            sB.append(pila.peek());
+                            pila.pop();
+                        }
+                        pila.push(c);
+                        break;
+                    case 4: 
+                        //Caso de la division
+                        while(!pila.isEmpty() && jerarquia(pila.peek())>=4){
+                            sB.append(pila.peek());
+                            pila.pop();
+                        }
+                        pila.push(c);
+                        break;
+                    case 5: 
+                        //Caso de la potencia
+                        while(!pila.isEmpty() && jerarquia(pila.peek())>=5){
+                            sB.append(pila.peek());
+                            pila.pop();
+                        }
+                        pila.push(c);
+                        break;
+                    default: 
+                        //Caso de que no sea operador, lo agrega directo al posfijo
+                        sB.append(c);
+                        break;    
+                }
+                i++;
+            }
+        }
+        else
+            //Si los parentesis no estan balanceados
+            sB.append("\nError: Parentesis");
+        return sB.toString();
+    }
+    public static void main (String[]args){
+        //Checando métodos auxiliares: Parentesis
+        System.out.println("Checando revisa parentesis: "+revisaParentesis("a+b"));
+        System.out.println("Checando revisa parentesis: "+revisaParentesis("a*(b-c)"));
+        System.out.println("Checando revisa parentesis: "+revisaParentesis("a*(b-c"));
+        //Checando metodos auxiliares: Jerarquia
+        System.out.println("Jerarquia: "+jerarquia('a'));
+        System.out.println("Jerarquia: "+jerarquia('*'));
+        //Checando programa posfijo
+        System.out.println("Checando posfijo: "+conviertePosfijo("a+b"));
+        System.out.println("Checando posfijo: "+conviertePosfijo("a-b*c"));
+        System.out.println("Checando posfijo: "+conviertePosfijo("a-b*c)"));
+    }
+}   
+    
 
