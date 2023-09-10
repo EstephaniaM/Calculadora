@@ -6,57 +6,26 @@ public class InfijoAPosfijo {
     
     public InfijoAPosfijo(){
     }
-    
-    //Metodo auxiliar para revisar los parentesis 
-    private static boolean revisaParentesis(String cadena){
-        boolean resp = true; 
-        PilaA <Character> pila = new PilaA <Character>();
-        int i=0; 
-        char c; 
-        
-        while(i<cadena.length() && resp){
-            c = cadena.charAt(i);
-            switch(c){
-                case '[':
-                    pila.push(']');
-                    break;
-                case '{':
-                    pila.push('}');
-                    break; 
-                case '(':
-                    pila.push(')');
-                    break;
-            }
-            if(c == '}'||c==']'||c==')')
-                if(pila.isEmpty() || c != pila.pop())
-                    resp = false;
-            i++;
-        }
-        return resp && pila.isEmpty();
-    }
     //Metodo auxiliar para asignar el valor de los operadores para jerarquia
     private static int jerarquia(char operador){
         int jerarquia=0; 
         switch (operador){
             case '*':
-                jerarquia = 4;
+                jerarquia = 3;
                 break;
             case '/':
-                jerarquia = 4;
+                jerarquia = 3;
                 break;
             case '+':
-                jerarquia = 3;
-                break;
-            case '-':
-                jerarquia = 3;
-                break;
-            case '^':
-                jerarquia = 5;
-                break;
-            case '(':
                 jerarquia = 2;
                 break;
-            case ')':
+            case '-':
+                jerarquia = 2;
+                break;
+            case '^':
+                jerarquia = 4;
+                break;
+            case '(':
                 jerarquia = 1;
                 break;
             default: 
@@ -65,80 +34,78 @@ public class InfijoAPosfijo {
         }
         return jerarquia;
     }
-    //Metodo para convertir en posfijo basado en un string
-    public static String conviertePosfijo(String infijo){
-        //Pila en donde guarda los operadores
-        PilaA <Character> pila = new PilaA (100);
-        //StringBuilder del resultado
-        StringBuilder sB = new StringBuilder();
-        //Revisa primero que los parentesis esten balanceados
-        if(revisaParentesis(infijo)){
-            int i=0; 
-            while(i<infijo.length()){
-                char c = infijo.charAt(i);
-                //Switch basado en el int que da la jerarquia de ese char
-                switch(jerarquia(c)) {
-                    //Caso del parentesis cerrado
-                    case 1: 
-                        //Mientras la pila no este vacia y el tope no sea parentesis abierto
-                        while(!pila.isEmpty() && jerarquia(pila.peek())!=2){
-                            sB.append(pila.peek());
-                            pila.pop();
-                        }
-                        break;
-                    case 2: 
-                        //Si el parentesis es abierto lo agrega a la pila
-                        pila.push(c);
-                        break; 
-                    case 3: 
-                        //Caso de la multiplicacion
-                        while(!pila.isEmpty() && jerarquia(pila.peek())>=3){
-                            sB.append(pila.peek());
-                            pila.pop();
-                        }
-                        pila.push(c);
-                        break;
-                    case 4: 
-                        //Caso de la division
-                        while(!pila.isEmpty() && jerarquia(pila.peek())>=4){
-                            sB.append(pila.peek());
-                            pila.pop();
-                        }
-                        pila.push(c);
-                        break;
-                    case 5: 
-                        //Caso de la potencia
-                        while(!pila.isEmpty() && jerarquia(pila.peek())>=5){
-                            sB.append(pila.peek());
-                            pila.pop();
-                        }
-                        pila.push(c);
-                        break;
-                    default: 
-                        //Caso de que no sea operador, lo agrega directo al posfijo
-                        sB.append(c);
-                        break;    
-                }
-                i++;
-            }
-        }
-        else
-            //Si los parentesis no estan balanceados
-            sB.append("\nError: Parentesis");
-        return sB.toString();
+    //Método auxiliar para revisar si el char es operador
+    private static boolean checarOperador(char c){
+        boolean resp = false; 
+        if(c=='+'||c=='-'||c=='*'||c=='/'||c=='^')
+            resp = true;
+        return resp;  
     }
+    //Método auxiliar para revisar si el char es un parentesis
+    private static boolean parentesis(char c){
+        boolean resp = false; 
+        if(c=='('||c==')')
+            resp = true;
+        return resp;   
+    }
+  
+    //Metodo para convertir en posfijo basado en un string
+    public static ArrayList<Character> conviertePosfijo(ArrayList<Character> infijo){
+        PilaA <Character> pila = new PilaA (100);  //Pila en donde guarda los operadores
+        ArrayList<Character> posfijo = new ArrayList(); //ArrayList del resultado
+        char c;
+        for(int i=0; i<infijo.size();i++){
+            c = infijo.get(i);
+            if(checarOperador(c)){ //Si el char es un operador revisa la jerarquia de pila.peek() y saca o mete de la pila
+                while(!pila.isEmpty() && jerarquia(pila.peek())>=jerarquia(c))
+                    posfijo.add(pila.pop());
+                pila.push(c);
+            }
+            if(!checarOperador(c) && !parentesis(c)) //Si no es operador o parentesis, agrega al ArrayList posfijo
+               posfijo.add(c);     
+            else {
+                if(c=='(') //Agrega a la pila directo
+                    pila.push(c);
+                if(c==')'){
+                    while(pila.peek()!='(') //Saca todo de la pila hasta que no encuentre el parentesis abierto
+                        posfijo.add(pila.pop());
+                    pila.pop();
+                } 
+            }   
+        } //Una vez que se termino de revisar el ArrayList infijo, vacia la pila de operadores
+        while(!pila.isEmpty())
+            posfijo.add(pila.pop());
+        return posfijo;
+    }
+       
     public static void main (String[]args){
-        //Checando métodos auxiliares: Parentesis
-        System.out.println("Checando revisa parentesis: "+revisaParentesis("a+b"));
-        System.out.println("Checando revisa parentesis: "+revisaParentesis("a*(b-c)"));
-        System.out.println("Checando revisa parentesis: "+revisaParentesis("a*(b-c"));
         //Checando metodos auxiliares: Jerarquia
         System.out.println("Jerarquia: "+jerarquia('a'));
         System.out.println("Jerarquia: "+jerarquia('*'));
+        System.out.println("Jerarquia: "+jerarquia('/');
+        System.out.println("Jerarquia: "+jerarquia('-'));
+        System.out.println("Jerarquia: "+jerarquia('+'));
+        System.out.println("Jerarquia: "+jerarquia('^'));
+        System.out.println("Jerarquia: "+jerarquia('('));
         //Checando programa posfijo
-        System.out.println("Checando posfijo: "+conviertePosfijo("a+b"));
-        System.out.println("Checando posfijo: "+conviertePosfijo("a-b*c"));
-        System.out.println("Checando posfijo: "+conviertePosfijo("a-b*c)"));
+        ArrayList<Character> array = new ArrayList();
+        array.add('a');
+        array.add('+');
+        array.add('b');
+        array.add('*');
+        array.add('d');
+        array.add('/');
+        array.add('z');
+        System.out.println("Checando posfijo: "+conviertePosfijo(array));
+        ArrayList<Character> array2 = new ArrayList();
+        array2.add('a');
+        array2.add('+');
+        array2.add('(');
+        array2.add('b');
+        array2.add('-');
+        array2.add('c');
+        array2.add(')');
+        System.out.println("Checando posfijo: "+conviertePosfijo(array2));
     }
 }   
     
