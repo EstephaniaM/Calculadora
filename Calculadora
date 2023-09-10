@@ -7,25 +7,25 @@ public class InfijoAPosfijo {
     public InfijoAPosfijo(){
     }
     //Metodo auxiliar para asignar el valor de los operadores para jerarquia
-    private static int jerarquia(char operador){
+    private static int jerarquia(String operador){
         int jerarquia=0; 
         switch (operador){
-            case '*':
+            case "*":
                 jerarquia = 3;
                 break;
-            case '/':
+            case "/":
                 jerarquia = 3;
                 break;
-            case '+':
+            case "+":
                 jerarquia = 2;
                 break;
-            case '-':
+            case "-":
                 jerarquia = 2;
                 break;
-            case '^':
+            case "^":
                 jerarquia = 4;
                 break;
-            case '(':
+            case "(":
                 jerarquia = 1;
                 break;
             default: 
@@ -35,25 +35,25 @@ public class InfijoAPosfijo {
         return jerarquia;
     }
     //Método auxiliar para revisar si el char es operador
-    private static boolean checarOperador(char c){
+    private static boolean checarOperador(String c){
         boolean resp = false; 
-        if(c=='+'||c=='-'||c=='*'||c=='/'||c=='^')
+        if(c.equals("+")||c.equals("-")||c.equals("*")||c.equals("/")||c.equals("^"))
             resp = true;
         return resp;  
     }
     //Método auxiliar para revisar si el char es un parentesis
-    private static boolean parentesis(char c){
+    private static boolean parentesis(String c){
         boolean resp = false; 
-        if(c=='('||c==')')
+        if(c.equals("(")||c.equals(")"))
             resp = true;
         return resp;   
     }
   
     //Metodo para convertir en posfijo basado en un string
-    public static ArrayList<Character> conviertePosfijo(ArrayList<Character> infijo){
-        PilaA <Character> pila = new PilaA (100);  //Pila en donde guarda los operadores
-        ArrayList<Character> posfijo = new ArrayList(); //ArrayList del resultado
-        char c;
+    public static ArrayList<String> conviertePosfijo(ArrayList<String> infijo){
+        PilaA <String> pila = new PilaA (100);  //Pila en donde guarda los operadores
+        ArrayList<String> posfijo = new ArrayList(); //ArrayList del resultado
+        String c;
         for(int i=0; i<infijo.size();i++){
             c = infijo.get(i);
             if(checarOperador(c)){ //Si el char es un operador revisa la jerarquia de pila.peek() y saca o mete de la pila
@@ -64,10 +64,10 @@ public class InfijoAPosfijo {
             if(!checarOperador(c) && !parentesis(c)) //Si no es operador o parentesis, agrega al ArrayList posfijo
                posfijo.add(c);     
             else {
-                if(c=='(') //Agrega a la pila directo
+                if(c.equals("(")) //Agrega a la pila directo
                     pila.push(c);
                 if(c==')'){
-                    while(pila.peek()!='(') //Saca todo de la pila hasta que no encuentre el parentesis abierto
+                    while(!pila.peek().equals(")) //Saca todo de la pila hasta que no encuentre el parentesis abierto
                         posfijo.add(pila.pop());
                     pila.pop();
                 } 
