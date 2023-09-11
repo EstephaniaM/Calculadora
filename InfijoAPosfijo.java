@@ -118,6 +118,14 @@ public class InfijoAPosfijo {
         return pila.pop();
     }
 
+      public static ArrayList <String> clearOut(ArrayList <String> arr){
+        
+        if(!arr.isEmpty()){
+            arr.clear();
+        }
+        return arr;
+    }
+
     
     public static void main (String[]args){
         //Checando metodos auxiliares: Jerarquia
@@ -179,6 +187,21 @@ public class InfijoAPosfijo {
         array6.add("/");
         array6.add("+");
         System.out.println("Checando evaluacion: "+evaluaPosfijo(array6));
+
+        ArrayList<String> array7 = new ArrayList();
+        array7.add("2");
+        array7.add("-");
+        array7.add("0");
+        array7.add("/");
+        
+        System.out.println("Prueba clear" + array7.toString());
+        clearOut(array7);
+        System.out.println("Prueba clear" + array7.toString());
+
+        ArrayList<String> array8 = new ArrayList();
+
+        System.out.println("Prueba clear" + array8.toString());
+        
     }
 }  
 
