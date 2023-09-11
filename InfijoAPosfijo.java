@@ -117,7 +117,7 @@ public class InfijoAPosfijo {
         }
         return pila.pop();
     }
-
+      //Mtetodo que recibe un array y lo devuelve vacio 
       public static ArrayList <String> clearOut(ArrayList <String> arr){
         
         if(!arr.isEmpty()){
