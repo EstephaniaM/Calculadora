@@ -1,4 +1,4 @@
-
+r
 package Calculadora;
 
 import Pilas.PilaA;
@@ -71,7 +71,7 @@ public class InfijoAPosfijo {
      * <li> false: si el String no es "(" o ")"
      * <ul>
      */
-    private static boolean parentesis(String c){
+    private static boolean checarParentesis(String c){
         boolean resp = false; 
         if(c.equals("(")||c.equals(")"))
             resp = true;
