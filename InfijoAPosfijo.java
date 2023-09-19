@@ -3,31 +3,43 @@ package Calculadora;
 
 import Pilas.PilaA;
 import java.util.ArrayList;
-
+/**
+ * 
+ * @author Grupo3 Estructura de Datos Otoño 2023 Grupo 001
+ */
 public class InfijoAPosfijo {
     
     public InfijoAPosfijo(){
     }
-    //Metodo auxiliar para asignar el valor de los operadores para jerarquia
+   /**
+    * Método auxiliar para asignar el valor de los operadores y obtener una jerarquía
+    * <pre>
+    * Utiliza un switch para identificar el tipo de operador
+    * Cada caso asigna un valor distinto de acuerdo a la jerarquía de las operaciones
+    * <pre>
+    * @param operador String
+    * @return int valor asignado al operador 
+    */
+    
     private static int jerarquia(String operador){
         int jerarquia=0; 
         switch (operador){
-            case "*":
+            case "*": //Tanto la multiplicacion como la división son de la misma jerarquía 
                 jerarquia = 3;
                 break;
             case "/":
                 jerarquia = 3;
                 break;
-            case "+":
+            case "+": //La suma y la resta son de la misma jerarquía
                 jerarquia = 2;
                 break;
             case "-":
                 jerarquia = 2;
                 break;
-            case "^":
+            case "^": //La potencia tiene la máxima jerarquía después del paréntesis
                 jerarquia = 4;
                 break;
-            case "(":
+            case "(": //Menor jerarquía para que lo saque al momento de encontrar su contraparte
                 jerarquia = 1;
                 break;
             default: 
@@ -36,22 +48,43 @@ public class InfijoAPosfijo {
         }
         return jerarquia;
     }
-    //Método auxiliar para revisar si el char es operador
+    /**
+     * Método auxiliar para revisar si el String es operador
+     * @param c String
+     * @return boolean <ul>
+     * <li> true: si es un operador "+","-","*","/","^"
+     * <li> false: si no es un operador
+     * <ul>
+     */
+
     private static boolean checarOperador(String c){
         boolean resp = false; 
         if(c.equals("+")||c.equals("-")||c.equals("*")||c.equals("/")||c.equals("^"))
             resp = true;
         return resp;  
     }
-    //Método auxiliar para revisar si el char es un parentesis
+    /**
+     * Método auxiliar para revisar si el String es un paréntesis
+     * @param c String
+     * @return boolean <ul>
+     * <li> true: si el String es "(" o ")"
+     * <li> false: si el String no es "(" o ")"
+     * <ul>
+     */
     private static boolean parentesis(String c){
         boolean resp = false; 
         if(c.equals("(")||c.equals(")"))
             resp = true;
         return resp;   
     }
-  
-    //Metodo para convertir en posfijo basado en un string
+    /**
+     * Método para convertir una expresión en String de infijo a posfijo
+     * @param infijo El ArrayList en el que está guardada la expresión en infijo como escrita por el cliente
+     * @return ArrayList de String: expresión convertida a posfijo
+     * @see parentesis
+     * @see checarOperador
+     */
+
     public static ArrayList<String> conviertePosfijo(ArrayList<String> infijo){
         PilaA <String> pila = new PilaA (100);  //Pila en donde guarda los operadores
         ArrayList<String> posfijo = new ArrayList(); //ArrayList del resultado
@@ -79,8 +112,20 @@ public class InfijoAPosfijo {
             posfijo.add(pila.pop());
         return posfijo;
     }
+    /**
+     * Método para evaluar una expresión en posfijo
+     * <pre>
+     * Toma una expresión en posfijo y a través de pilas evalúa las operaciones
+     * A través de un switch se identifica al operador y asigna la operación a realizar correspondiente
+     * La única operación restringida es la división por cero a través de una bandera
+     * <pre>
+     * @param posfijo ArrayList de la expresión infija convertida a posfija 
+     * @return Double: resultado final de la operación ingresada por el usuario
+     * @see checarOperador
+     */
+    
     public static double evaluaPosfijo(ArrayList<String> posfijo){
-        
+       
         PilaA <Double> pila = new PilaA(100);
         int i=0; 
         boolean bandera = true;
@@ -117,15 +162,6 @@ public class InfijoAPosfijo {
         }
         return pila.pop();
     }
-      //Mtetodo que recibe un array y lo devuelve vacio 
-      public static ArrayList <String> clearOut(ArrayList <String> arr){
-        
-        if(!arr.isEmpty()){
-            arr.clear();
-        }
-        return arr;
-    }
-
     
     public static void main (String[]args){
         //Checando metodos auxiliares: Jerarquia
@@ -146,6 +182,7 @@ public class InfijoAPosfijo {
         array.add("/");
         array.add("z");
         System.out.println("Checando posfijo: "+conviertePosfijo(array));
+        //Checando programa posfijo: utilizando otro ArrayList en infijo
         ArrayList<String> array2 = new ArrayList();
         array2.add("a");
         array2.add("+");
@@ -155,6 +192,7 @@ public class InfijoAPosfijo {
         array2.add("c");
         array2.add(")");
         System.out.println("Checando posfijo: "+conviertePosfijo(array2));
+        //Checando programa posfijo: utilizando otro ArrayList en infijo
         ArrayList<String> array3 = new ArrayList();
         array3.add("2");
         array3.add("+");
@@ -164,11 +202,13 @@ public class InfijoAPosfijo {
         array3.add("-");
         array3.add("1");
         System.out.println("Convierte posfijo: "+conviertePosfijo(array3));
+        //Checando programa para evaluar posfijo: utilizando un posfijo sencillo
         ArrayList<String> array4 = new ArrayList();
         array4.add("2");
         array4.add("3");
         array4.add("+");
         System.out.println("Checando evaluacion: "+evaluaPosfijo(array4));
+        //Checando programa para evaluar posfijo: utilizando posfijo más complicado
         ArrayList<String> array5 = new ArrayList();
         array5.add("2");
         array5.add("3");
@@ -178,6 +218,7 @@ public class InfijoAPosfijo {
         array5.add("1");
         array5.add("-");
         System.out.println("Checando evaluacion: "+evaluaPosfijo(array5));
+        //Checando programa para evaluar posfijo: utilizando un tercer posfijo
         ArrayList<String> array6 = new ArrayList();
         array6.add("2");
         array6.add("3");
@@ -187,21 +228,17 @@ public class InfijoAPosfijo {
         array6.add("/");
         array6.add("+");
         System.out.println("Checando evaluacion: "+evaluaPosfijo(array6));
-
+        //Checando programa para evaluar posfijo: se prueban los números negativos 
         ArrayList<String> array7 = new ArrayList();
-        array7.add("2");
-        array7.add("-");
-        array7.add("0");
-        array7.add("/");
-        
-        System.out.println("Prueba clear" + array7.toString());
-        clearOut(array7);
-        System.out.println("Prueba clear" + array7.toString());
-
-        ArrayList<String> array8 = new ArrayList();
-
-        System.out.println("Prueba clear" + array8.toString());
-        
+        array6.add("-2");
+        array6.add("3");
+        array6.add("-4");
+        array6.add("*");
+        array6.add("5");
+        array6.add("/");
+        array6.add("+");
+        System.out.println("Checando evaluacion: "+evaluaPosfijo(array7));
+        //NOTA: Tomar en consideración que el programa puede confundir números negativos con signo de resta
     }
-}  
+} 
 
