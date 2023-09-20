@@ -172,6 +172,25 @@ public class InfijoAPosfijo {
         System.out.println("Jerarquia: "+jerarquia("^"));
         System.out.println("Jerarquia: "+jerarquia("+"));
         System.out.println("Jerarquia: "+jerarquia("("));
+        //Checando boolean de operador
+        System.out.println("Checando si es operador signo *: "+checarOperador("*"));
+        //Checnado boolean de operador en caso de ser número
+        System.out.println("Checando si es operador número 1: "+checarOperador("1"));
+        //Checando el resto de los operadores para que de true el método auxiliar para checar operador
+        System.out.println("Checando si es operador signo +: "+checarOperador("+"));
+        System.out.println("Checando si es operador signo -: "+checarOperador("-"));
+        System.out.println("Checando si es operador signo /: "+checarOperador("/"));
+        System.out.println("Checando si es operador signo -: "+checarOperador("^"));
+        //Checar si una letra la toma como no operador
+        System.out.println("Checando si es operador letra a: "+checarOperador("a"));
+        System.out.println("Checando si es operador si está vacío: "+checarOperador(""));
+        //Checar si un numero negativo lo puede confundir como operador de resta
+        System.out.println("Checando si es operador número negativo -2: "+checarOperador("-2"));
+        //Checando boolean de paréntesis
+        System.out.println("Probando método para checar si es paréntesis '(': "+ parentesis("("));
+        System.out.println("Probando método para checar si es paréntesis ')': "+ parentesis(")"));
+        System.out.println("Probando método para checar si es paréntesis el número 1: "+ parentesis("1"));
+        System.out.println("Probando método para checar si es paréntesis String vacío: "+ parentesis(""));
         //Checando programa posfijo
         ArrayList<String> array = new ArrayList();
         array.add("a");
@@ -181,8 +200,8 @@ public class InfijoAPosfijo {
         array.add("d");
         array.add("/");
         array.add("z");
-        System.out.println("Checando posfijo: "+conviertePosfijo(array));
-        //Checando programa posfijo: utilizando otro ArrayList en infijo
+        System.out.println("Checando posfijo complejo a+b*d/z: "+conviertePosfijo(array));
+        //Checando programa posfijo: utilizando otro ArrayList en infijo con paréntesis
         ArrayList<String> array2 = new ArrayList();
         array2.add("a");
         array2.add("+");
@@ -191,7 +210,17 @@ public class InfijoAPosfijo {
         array2.add("-");
         array2.add("c");
         array2.add(")");
-        System.out.println("Checando posfijo: "+conviertePosfijo(array2));
+        System.out.println("Checando posfijo con parentesis a+(b-c): "+conviertePosfijo(array2));
+        //Checando convertir a posfijo con una sola variable
+        ArrayList<String> simple = new ArrayList();
+        simple.add("1");
+        System.out.println("Checando posfijo con una sola variable 1: "+conviertePosfijo(simple));
+        //Aprovechando para probar la evaluacion de posfijo en una sola variable
+        System.out.println("Checando la evaluación de posfijo con una sola variable 1: "+evaluaPosfijo(simple));
+        //Checando convertir a posfijo con una sola variable
+        ArrayList<String> simple1 = new ArrayList();
+        simple1.add("a");
+        System.out.println("Checando posfijo con una sola variable: a "+conviertePosfijo(simple1));
         //Checando programa posfijo: utilizando otro ArrayList en infijo
         ArrayList<String> array3 = new ArrayList();
         array3.add("2");
@@ -201,13 +230,24 @@ public class InfijoAPosfijo {
         array3.add("4");
         array3.add("-");
         array3.add("1");
-        System.out.println("Convierte posfijo: "+conviertePosfijo(array3));
+        System.out.println("Convierte posfijo complejo 2+3*4-1: "+conviertePosfijo(array3));
+        //Checando programa posfijo: metiendo números negativos 
+        ArrayList<String> array35 = new ArrayList();
+        array35.add("2");
+        array35.add("+");
+        array35.add("3");
+        array35.add("*");
+        array35.add("-4");
+        array35.add("-");
+        array35.add("1");
+        System.out.println("Convierte posfijo con negativo 2+3*-4-1: "+conviertePosfijo(array35));
+        System.out.println("Evaluando el posfijo con negativo recién convertido: "+evaluaPosfijo(conviertePosfijo(array35)));
         //Checando programa para evaluar posfijo: utilizando un posfijo sencillo
         ArrayList<String> array4 = new ArrayList();
         array4.add("2");
         array4.add("3");
         array4.add("+");
-        System.out.println("Checando evaluacion: "+evaluaPosfijo(array4));
+        System.out.println("Checando evaluacion con una sola operacion 2 3 +: "+evaluaPosfijo(array4));
         //Checando programa para evaluar posfijo: utilizando posfijo más complicado
         ArrayList<String> array5 = new ArrayList();
         array5.add("2");
@@ -217,28 +257,44 @@ public class InfijoAPosfijo {
         array5.add("+");
         array5.add("1");
         array5.add("-");
-        System.out.println("Checando evaluacion: "+evaluaPosfijo(array5));
-        //Checando programa para evaluar posfijo: utilizando un tercer posfijo
+        System.out.println("Checando evaluacion con más de una operacion 2 3 / 4 + 1 -: "+evaluaPosfijo(array5));
+        //Checando programa para evaluar posfijo: utilizando un tercer posfijo con un numero negativo
         ArrayList<String> array6 = new ArrayList();
-        array6.add("2");
+        array6.add("-2");
         array6.add("3");
         array6.add("4");
         array6.add("*");
         array6.add("5");
         array6.add("/");
         array6.add("+");
-        System.out.println("Checando evaluacion: "+evaluaPosfijo(array6));
+        System.out.println("Checando evaluacion con negativo complejo -2 3 4 * 5 / +: "+evaluaPosfijo(array6));
         //Checando programa para evaluar posfijo: se prueban los números negativos 
-        ArrayList<String> array7 = new ArrayList();
-        array6.add("-2");
-        array6.add("3");
-        array6.add("-4");
-        array6.add("*");
-        array6.add("5");
-        array6.add("/");
-        array6.add("+");
-        System.out.println("Checando evaluacion: "+evaluaPosfijo(array7));
-        //NOTA: Tomar en consideración que el programa puede confundir números negativos con signo de resta
+        ArrayList<String> array7 = new ArrayList<String>();
+        array7.add("-2");
+        array7.add("1");
+        array7.add("+");
+        System.out.println("Checando evaluacion con negativo simple -2 1 +: "+evaluaPosfijo(array7));
+        //NOTA: Tomar en consideración que el programa puede confundir números negativos con signo de resta al momento de pasarlo a ArrayList
+        //Checando el programa con otro operador y un número negativo 
+        ArrayList<String> array8 = new ArrayList<String>();
+        array8.add("2");
+        array8.add("-8");
+        array8.add("*");
+        System.out.println("Checando evaluacion con negativo simple 2 -8 *: "+evaluaPosfijo(array8));
+        //Checar el programa para evaluar números negativos más complicado
+        ArrayList<String> array10 = new ArrayList<String>();
+        array10.add("-2");
+        array10.add("3");
+        array10.add("/");
+        array10.add("5");
+        array10.add("*");
+        System.out.println("Checando evaluacion con negativo complejo -2 3 / 5 *: "+evaluaPosfijo(array10));
+        //Checando la división por cero (debe de arrojar un error)
+        ArrayList<String> array9 = new ArrayList<String>();
+        array9.add("2");
+        array9.add("0");
+        array9.add("/");
+        System.out.println("Checando evaluacion division con cero 2 0 /: "+evaluaPosfijo(array9));
     }
 } 
 
