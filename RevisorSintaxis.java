@@ -11,7 +11,18 @@ public class RevisorSintaxis {
 	public RevisorSintaxis(String operacion) {
 		this.operacion = operacion;
 	}
-
+	/**
+     * Método principal para determinar si la sintaxis 
+     * de la operacion insertada por el usuario es correcta.
+     * <pre>
+     * Utiliza un switch para identificar el tipo de operador
+     * y varios if dependiendo de distintas posibles situaciones de error
+     * <pre>
+     * <li> true: si la sintaxis es correcta
+     * <li> false: si la sintaxis es incorrecta
+     * @param ninguno, unicamente instanciar un objeto RevisorSintaxis con un String
+     * @return boolean para saber si es correcto o no
+     */
 	// metodo para saber si es correcta la sintaxis de la operacion.
 	public boolean isSyntaxOk() {
 		boolean resp = true;
@@ -50,11 +61,32 @@ public class RevisorSintaxis {
 					i = operacion.length();
 				}
 				break;
-			case '+', '-', '/', '*', '^':
+			case '-':
+				if (i >= 0 && i < operacion.length() - 1) {
+					if(i==0) {
+						
+					}
+					else if (!(((Character.isDigit(operacion.charAt(i - 1))) && (Character.isDigit(operacion.charAt(i + 1))))
+							|| ((Character.isDigit(operacion.charAt(i - 1))) && (operacion.charAt(i + 1) == '('))
+							|| ((Character.isDigit(operacion.charAt(i + 1))) && (operacion.charAt(i - 1) == ')'))
+							|| ((Character.isDigit(operacion.charAt(i + 1))) && (operacion.charAt(i - 1) == '*'))
+							|| ((operacion.charAt(i - 1) == '*') && (operacion.charAt(i + 1) == '('))
+							|| ((operacion.charAt(i - 1) == '(') && (operacion.charAt(i + 1) == '('))
+							|| ((!Character.isDigit(operacion.charAt(i-1))) && (operacion.charAt(i + 1) == '('))
+							|| ((Character.isDigit(operacion.charAt(i + 1))) && (operacion.charAt(i - 1) == '('))
+							|| ((operacion.charAt(i - 1) == ')') && (operacion.charAt(i + 1) == '(')))) {
+						resp = false;
+						i = operacion.length();
+					}
+				} else
+					resp = false;
+				break;
+			case '+', '/', '*', '^':
 				if (i > 0 && i < operacion.length() - 1) {
 					if (!(((Character.isDigit(operacion.charAt(i - 1))) && (Character.isDigit(operacion.charAt(i + 1))))
 							|| ((Character.isDigit(operacion.charAt(i - 1))) && (operacion.charAt(i + 1) == '('))
 							|| ((Character.isDigit(operacion.charAt(i + 1))) && (operacion.charAt(i - 1) == ')'))
+							|| ((Character.isDigit(operacion.charAt(i - 1))) && (operacion.charAt(i + 1) == '-'))
 							|| ((operacion.charAt(i - 1) == ')') && (operacion.charAt(i + 1) == '(')))) {
 						resp = false;
 						i = operacion.length();
@@ -89,6 +121,11 @@ public class RevisorSintaxis {
 		return x.isEmpty() && resp && !flag;
 	}
 
+	/**
+     * Método main para realizar las distintas pruebas para los métodos
+     * <pre>
+     * @param args
+     */
 	public static void main(String[] args) {
 		RevisorSintaxis a = new RevisorSintaxis("8.35.4*9");// doble punto
 		RevisorSintaxis b = new RevisorSintaxis("(3+1)(3)");// falta operador entre los parentesis
@@ -100,7 +137,7 @@ public class RevisorSintaxis {
 		RevisorSintaxis h = new RevisorSintaxis("9+3=12");// simbolos que no sean +,-,*,/,^
 		RevisorSintaxis i = new RevisorSintaxis("");// cadena vacia
 		RevisorSintaxis j = new RevisorSintaxis("(12)-(23)");
-		RevisorSintaxis k = new RevisorSintaxis("()()");// parentesis vacios
+		RevisorSintaxis k = new RevisorSintaxis("-2");// parentesis vacios
 
 		System.out.println("Operacion a: " + a.isSyntaxOk());
 		System.out.println("Operacion b: " + b.isSyntaxOk());
